@@ -1,0 +1,8 @@
+name "simplepatterns"
+description "Various design patterns implemented in the d programming language.."
+copyright "Copyright © 2017"
+authors "Paul Crane"
+targetType "library"
+configuration "library" {
+	targetType "library"
+}
