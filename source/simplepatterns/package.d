@@ -2,5 +2,5 @@ module simplepatterns;
 
 public
 {
-	import 	simplepatterns.simplepatterns;
+	import simplepatterns.queue;
 }
