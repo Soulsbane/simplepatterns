@@ -146,6 +146,17 @@ struct CapacityStack(T, alias capacity = 10)
 		}
 	}
 
+	/**
+		Determines whether the stack is at max capacity.
+
+		Returns:
+			True if stack is full false otherwise.
+	*/
+	bool isFull() pure nothrow @safe
+	{
+		return (stack_.length == maxCapacity_);
+	}
+
 	SimpleStack!T stack_;
 	alias stack_ this;
 
@@ -160,8 +171,13 @@ unittest
 
 	cap.push(22);
 	cap.push(342);
+
+	assert(cap.isFull() == false);
+
 	cap.push(858);
 	cap.push(1);
+
+	assert(cap.isFull() == true);
 	assert(cap.top == 858);
 	cap.pop();
 	assert(cap.top == 342);
