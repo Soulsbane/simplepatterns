@@ -147,6 +147,17 @@ struct CapacityQueue(T, alias capacity = 10)
 		}
 	}
 
+	/**
+		Determines whether the queue is at max capacity.
+
+		Returns:
+			True if queue is full false otherwise.
+	*/
+	bool isFull() pure nothrow @safe
+	{
+		return (queue_.length == maxCapacity_);
+	}
+
 	SimpleQueue!T queue_;
 	alias queue_ this;
 
@@ -162,9 +173,15 @@ unittest
 
 	cap.push(22);
 	cap.push(342);
+
+	assert(cap.isFull() == false);
+
 	cap.push(858);
 	cap.push(1);
+
 	assert(cap.front == 22);
+	assert(cap.isFull() == true);
+
 	cap.pop();
 	assert(cap.front == 342);
 }
