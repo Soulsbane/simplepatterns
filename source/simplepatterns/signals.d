@@ -5,6 +5,11 @@ module simplepatterns.signals;
 
 import std.algorithm;
 
+version(unittest)
+{
+	import fluent.asserts;
+}
+
 /**
 	The implementation of the signals pattern.
 */
@@ -55,35 +60,32 @@ private:
 ///
 unittest
 {
-	import std.stdio : writeln;
-
-	writeln;
-	writeln("<=====================Beginning test for signals module=====================>");
-
 	alias NotifyFunction = void delegate(); // Must be a delegate if functions are inside the unittest block.
 	Signals!NotifyFunction signals;
 
+	size_t count;
+
 	void firstFunc()
 	{
-		writeln("This is the FirstFunc calling...");
+		++count;
 	}
 
 	void secondFunc()
 	{
-		writeln("This is the SecondFunc calling...");
+		++count;
 	}
 
 	signals.connect(&firstFunc);
 	signals.connect(&secondFunc);
 	signals.emit();
 
-	writeln("Removing firstFunc.");
 	signals.disconnect(&firstFunc);
 	signals.emit();
 
-	writeln("Removing all slots.");
 	signals.disconnectAll();
 	signals.emit();
+
+	count.should.equal(3);
 
 	alias NotifyDelegate = void delegate();
 	alias NotifyDelegateArg = void delegate(string value);
@@ -92,35 +94,42 @@ unittest
 	{
 		this()
 		{
-			signals_.connect(&aVoidDel);
-			signals_.connect(&aVoidDel2);
+			signals_.connect(&voidDel);
+			signals_.connect(&voidDel2);
 			signals_.emit();
-			signals_.disconnect(&aVoidDel2);
+			signals_.disconnect(&voidDel2);
 			signals_.emit();
 			signals_.disconnectAll();
 			signals_.emit();
-			signals_.connect(&aArgDel);
+			signals_.connect(&voidDel3);
 			signals_.emit();
 		}
 
-		void aVoidDel()
+		void voidDel()
 		{
-			writeln("Calling TestDelegates.aVoidDel");
+			++count;
 		}
 
-		void aVoidDel2()
+		void voidDel2()
 		{
-			writeln("Calling TestDelegates.aVoidDel2");
+			++count;
 		}
 
-		void aArgDel()
+		void voidDel3()
 		{
-			writeln("Calling TestDelegates.aArgDel");
+			++count;
+		}
+
+		size_t getCount()
+		{
+			return count;
 		}
 
 	private:
 		Signals!NotifyDelegate signals_;
+		size_t count;
 	}
 
 	auto test = new TestDelegates;
+	test.getCount.should.equal(4);
 }
