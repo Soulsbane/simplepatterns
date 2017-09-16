@@ -87,8 +87,35 @@ unittest
 
 	count.should.equal(3);
 
+	alias NotifyFuncWithArgs = void delegate(string value);
+	Signals!NotifyFuncWithArgs argsSignals;
+	string argsValue;
+
+	void argsFunc(string value)
+	{
+		argsValue = "Hello " ~ value;
+	}
+
+	void argsFunc2(string value)
+	{
+		argsValue = "Goodbye " ~ value;
+	}
+
+	argsSignals.emit("World");
+	argsValue.should.equal(string.init);
+
+	argsSignals.connect(&argsFunc);
+	argsSignals.connect(&argsFunc2);
+	argsSignals.emit("World");
+
+	argsValue.should.equal("Goodbye World");
+
+	argsSignals.disconnect(&argsFunc2);
+	argsSignals.emit("World");
+
+	argsValue.should.equal("Hello World");
+
 	alias NotifyDelegate = void delegate();
-	alias NotifyDelegateArg = void delegate(string value);
 
 	class TestDelegates
 	{
