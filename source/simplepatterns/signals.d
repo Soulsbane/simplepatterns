@@ -5,11 +5,6 @@ module simplepatterns.signals;
 
 import std.algorithm;
 
-version(unittest)
-{
-	import fluent.asserts;
-}
-
 /**
 	The implementation of the signals pattern.
 */
@@ -85,7 +80,7 @@ unittest
 	signals.disconnectAll();
 	signals.emit();
 
-	count.should.equal(3);
+	assert(count == 3);
 
 	alias NotifyFuncWithArgs = void delegate(string value);
 	Signals!NotifyFuncWithArgs argsSignals;
@@ -102,18 +97,18 @@ unittest
 	}
 
 	argsSignals.emit("World");
-	argsValue.should.equal(string.init);
+	assert(argsValue == string.init);
 
 	argsSignals.connect(&argsFunc);
 	argsSignals.connect(&argsFunc2);
 	argsSignals.emit("World");
 
-	argsValue.should.equal("Goodbye World");
+	assert(argsValue == "Goodbye World");
 
 	argsSignals.disconnect(&argsFunc2);
 	argsSignals.emit("World");
 
-	argsValue.should.equal("Hello World");
+	assert(argsValue == "Hello World");
 
 	alias NotifyDelegate = void delegate();
 
@@ -158,5 +153,5 @@ unittest
 	}
 
 	auto test = new TestDelegates;
-	test.getCount.should.equal(4);
+	assert(test.getCount == 4);
 }
