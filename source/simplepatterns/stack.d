@@ -96,6 +96,8 @@ struct SimpleStack(T)
 		return data_;
 	}
 
+	alias data_ this;
+
 private:
 	DList!T data_;
 }
